@@ -1,0 +1,34 @@
+﻿//DECLARE @inputfile ='/inputfiles/ContractDetails.txt';
+@input = 
+    EXTRACT 
+         
+        Area string,
+        ContractName string,
+        ContractStatus string,
+        ContractDate string,
+        Domain string,
+        ContractedHours string,
+        ContractAmt string,
+        RegularHours string        
+        
+        FROM "/inputfiles/ContractDetails.txt"        
+        USING Extractors.Text(delimiter: '\t');
+/*
+@Convert =
+    SELECT 
+           int.TryParse(RegularHours) AS RegularHours1sn
+    FROM @input;
+
+*/
+
+@group_amt =
+    SELECT Area,
+           SUM((int)RegularHours) AS TotalAmount
+    FROM @input
+    GROUP BY Area;
+
+  OUTPUT @Convert TO "/output/oacode_totals.csv"
+  USING Outputters.Csv();
+  
+    
+        
