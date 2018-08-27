@@ -1,0 +1,49 @@
+﻿<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>ad53d4ed-0d42-42b1-b7bd-c7be34e013ed</ProjectGuid>
+    <OutputType>File</OutputType>
+    <AssemblyName>Algebra.xml</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <Name>SampleUSQLProject</Name>
+    <RootNamespace>SampleUSQLProject</RootNamespace>
+    <RuntimeVersion>default</RuntimeVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>false</DebugSymbols>
+    <OutputPath>bin\Release\</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Script Include="AggregationsLab3.usql" />
+    <Script Include="Aggregation_Lab4.usql" />
+    <Script Include="Concat.usql" />
+    <Script Include="JoinsLab5.usql" />
+    <Script Include="SubString_USQL.usql" />
+    <ScriptCode Include="AggregationsLab3.usql.cs">
+      <DependentUpon>AggregationsLab3.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Aggregation_Lab4.usql.cs">
+      <DependentUpon>Aggregation_Lab4.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="Concat.usql.cs">
+      <DependentUpon>Concat.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="JoinsLab5.usql.cs">
+      <DependentUpon>JoinsLab5.usql</DependentUpon>
+    </ScriptCode>
+    <ScriptCode Include="SubString_USQL.usql.cs">
+      <DependentUpon>SubString_USQL.usql</DependentUpon>
+    </ScriptCode>
+  </ItemGroup>
+  <!-- check for SDK Build target in current path then in USQLSDKPath in the case of command line build -->
+  <Import Project="UsqlSDKBuild.targets" Condition="'$(BuildingInsideVisualStudio)' != 'true' And  Exists('UsqlSDKBuild.targets')" />
+  <Import Project="$(USQLSDKPath)\UsqlSDKBuild.targets" Condition="'$(BuildingInsideVisualStudio)' != 'true' And !Exists('UsqlSDKBuild.targets') And '$(USQLSDKPath)' != '' And Exists('$(USQLSDKPath)\UsqlSDKBuild.targets')" />
+  <!-- backward compatible with IDE build -->
+  <Import Project="$(AppData)\Microsoft\DataLake\MsBuild\1.0\Usql.targets" Condition="'$(BuildingInsideVisualStudio)' == 'true'" />
+</Project>

@@ -1,0 +1,55 @@
+﻿
+@ILF =
+EXTRACT 
+    SAPBillingDocumentTypeKey           int?,
+    SAPCancelledInvoiceID	            string,
+	InvoiceCancelledFlag                int,    
+	InvoicedDateKey                     int?,
+	BillingDocumentNumber               string,
+	RegularHours                        string,
+	TaxAmtBILL                          string,
+	ActualTransactionAmtBILL            string,
+	InvoiceProfileKey                   int
+    FROM "/inputfiles/ILF.txt"  
+    USING Extractors.Text(delimiter: '\t', skipFirstNRows : 1, quoting:false);
+
+@profile =
+    EXTRACT InvoiceProfileKey int,
+            BillingDocumentType string
+    FROM "/inputfiles/Profile.txt"
+    USING Extractors.Text(delimiter : '\t', skipFirstNRows : 1);
+
+@sap =
+    EXTRACT SAPBillingDocumentTypeKey int?,
+            SAPBillingDocumentTypeID string,
+            LanguageKey char,
+            Description string
+    FROM "/inputfiles/SAP_Billing_Document.txt"
+    USING Extractors.Text(delimiter : '\t', skipFirstNRows : 1);
+
+            
+@transform =
+    SELECT DISTINCT ilf.RegularHours.Replace("NULL","0") AS RegularHours
+                    ,p.BillingDocumentType
+                    ,s.SAPBillingDocumentTypeID
+    FROM @ILF AS ilf
+         INNER JOIN
+             @profile AS p
+         ON ilf.InvoiceProfileKey == p.InvoiceProfileKey
+         INNER JOIN @sap AS s 
+         ON s.SAPBillingDocumentTypeKey == ilf.SAPBillingDocumentTypeKey;
+
+
+
+
+@final =
+    SELECT Decimal.Parse(RegularHours) AS RegularHours,
+           BillingDocumentType,
+           SAPBillingDocumentTypeID
+    FROM @transform;
+
+//WHERE ilf.RegularHours IS NOT NULL ;
+OUTPUT @final TO "/output/ILF_totals.csv"
+USING Outputters.Csv(outputHeader : true, quoting:false);
+
+

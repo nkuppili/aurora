@@ -5,30 +5,36 @@
         Area string,
         ContractName string,
         ContractStatus string,
-        ContractDate string,
+        ContractDate DateTime,
         Domain string,
-        ContractedHours string,
-        ContractAmt string,
-        RegularHours string        
+        ContractedHours decimal?,
+        ContractAmt decimal?,
+        RegularHours decimal?      
         
         FROM "/inputfiles/ContractDetails.txt"        
-        USING Extractors.Text(delimiter: '\t');
-/*
-@Convert =
-    SELECT 
-           int.TryParse(RegularHours) AS RegularHours1sn
-    FROM @input;
+        USING Extractors.Text(delimiter: '\t', skipFirstNRows :1);
 
-*/
 
 @group_amt =
-    SELECT Area,
-           SUM((int)RegularHours) AS TotalAmount
+    SELECT 
+    
+            Area
+            ,ContractName
+            ,ContractDate  
+            ,SUM(RegularHours) AS TotalHours           
+           ,SUM(ContractAmt) AS ContractAmount
+       
+  
+    //RegularHours.Substring(0,4) AS RegularHours// Get the first 4 characters
     FROM @input
-    GROUP BY Area;
+    GROUP BY Area,
+             ContractName,
+      ContractDate;
 
-  OUTPUT @Convert TO "/output/oacode_totals.csv"
-  USING Outputters.Csv();
+
+
+  OUTPUT @group_amt TO "/output/oacode_totals.csv"
+  USING Outputters.Csv(outputHeader: true);
   
     
         

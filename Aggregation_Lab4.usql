@@ -1,0 +1,29 @@
+﻿//DECLARE @inputfile ='/inputfiles/ContractDetails.txt';
+@input = 
+    EXTRACT 
+         
+        EngagementID string,
+        EngagementName string,
+        ContractAmount decimal,
+        SalesOrg string,
+        ModifiedDate DateTime,
+        DataSource int   
+        
+        FROM "/inputfiles/ContractDetails.txt"        
+        USING Extractors.Text(delimiter: '\t', skipFirstNRows : 1, quoting:false);
+
+
+@group_amt =
+    SELECT (DataSource == 2) ?"Changepoint" : (DataSource == 55) ?"SAP" : (DataSource == 29) ?"Clarify" : "Unknown" AS DataSourceName,
+           // EngagementName,
+           SUM(ContractAmount) AS ContractAmount
+    FROM @input
+    GROUP BY DataSource;
+//EngagementName;    
+
+
+  OUTPUT @group_amt TO "/output/oacode_totals.csv"
+  USING Outputters.Csv(outputHeader: true);
+  
+    
+        

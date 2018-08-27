@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <StartFile>JoinsLab5.usql</StartFile>
+    <BuildClusterPlanProperty>False</BuildClusterPlanProperty>
+    <ActiveFile>JoinsLab5.usql</ActiveFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <ScriptUserData Include="AggregationsLab3.usql">
+      <UseLocalComputeAccount>true</UseLocalComputeAccount>
+      <LocalComputeAccount>DataLakeLocalCA:localcomputeaccount</LocalComputeAccount>
+      <LocalDatabase>webdata</LocalDatabase>
+      <LocalSchema>iis</LocalSchema>
+    </ScriptUserData>
+    <ScriptUserData Include="Aggregation_Lab4.usql">
+      <UseLocalComputeAccount>true</UseLocalComputeAccount>
+      <LocalComputeAccount>DataLakeLocalCA:localcomputeaccount</LocalComputeAccount>
+      <LocalDatabase>master</LocalDatabase>
+      <LocalSchema>dbo</LocalSchema>
+    </ScriptUserData>
+    <ScriptUserData Include="Concat.usql">
+      <UseLocalComputeAccount>true</UseLocalComputeAccount>
+      <LocalComputeAccount>DataLakeLocalCA:localcomputeaccount</LocalComputeAccount>
+      <LocalDatabase>master</LocalDatabase>
+      <LocalSchema>dbo</LocalSchema>
+    </ScriptUserData>
+    <ScriptUserData Include="JoinsLab5.usql">
+      <UseLocalComputeAccount>true</UseLocalComputeAccount>
+      <LocalComputeAccount>DataLakeLocalCA:localcomputeaccount</LocalComputeAccount>
+      <LocalDatabase>master</LocalDatabase>
+      <LocalSchema>dbo</LocalSchema>
+    </ScriptUserData>
+    <ScriptUserData Include="SubString_USQL.usql">
+      <LocalDatabase>TestReferenceDB</LocalDatabase>
+      <LocalSchema>usql</LocalSchema>
+      <UseLocalComputeAccount>true</UseLocalComputeAccount>
+      <LocalComputeAccount>DataLakeLocalCA:localcomputeaccount</LocalComputeAccount>
+    </ScriptUserData>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,17 @@
+﻿@someData =
+    SELECT * FROM
+        ( VALUES
+        ("abc", "def", "The Book Thief; Markus Zusak; 2005")
+        ) AS T(string1, string2, Books);
+
+@result =
+    SELECT string1 AS originalString,
+           String.Concat(string1, string2) AS Concatenated,
+           "abc" + "def" AS concatenatedAltMethod,
+           //Create and array from Books, then concatenate the elements
+           String.Concat(new SQL.ARRAY<string>(Books.Split(';'))) AS concatenatedArray
+    FROM @someData;
+
+OUTPUT @result
+TO "/Output/ReferenceGuide/BuiltInFunctions/CSharpFunctions/StringMethods/Concat.csv"
+USING Outputters.Csv(outputHeader: true);

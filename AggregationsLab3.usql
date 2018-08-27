@@ -1,0 +1,33 @@
+﻿@log =
+EXTRACT date string,
+ time string,
+ client_ip string,
+ username string,
+ server_ip string,
+ port int,
+ method string,
+ stem string,
+ query string,
+ status string,
+ server_bytes int,
+ client_bytes int,
+ time_taken int?,
+ user_agent string,
+ referrer string
+FROM "/iislogs/{*}.txt"
+USING Extractors.Text(' ', silent:true);
+
+
+
+
+@output =
+SELECT date,
+ COUNT(*) AS hits,
+ SUM(server_bytes) AS bytes_sent,
+ SUM(client_bytes) AS bytes_received
+FROM @log
+GROUP BY date;
+
+OUTPUT @output
+TO "/Output/ReferenceGuide/BuiltInFunctions/CSharpFunctions/StringMethods/WebDataAggregate.csv"
+USING Outputters.Csv(outputHeader: true);
