@@ -1,0 +1,33 @@
+# Set up the Blob storage account access key in the notebook session conf.
+spark.conf.set(
+  "fs.azure.account.key.<your-storage-account-name>.blob.core.windows.net",
+  "<your-storage-account-access-key>")
+
+# Get some data from a SQL DW table.
+df = spark.read \
+  .format("com.databricks.spark.sqldw") \
+  .option("url", "jdbc:sqlserver://<the-rest-of-the-connection-string>") \
+  .option("tempDir", "wasbs://<your-container-name>@<your-storage-account-name>.blob.core.windows.net/<your-directory-name>") \
+  .option("forwardSparkAzureStorageCredentials", "true") \
+  .option("dbTable", "my_table_in_dw") \
+  .load()
+
+# Load data from a SQL DW query.
+df = spark.read \
+  .format("com.databricks.spark.sqldw") \
+  .option("url", "jdbc:sqlserver://<the-rest-of-the-connection-string>") \
+  .option("tempDir", "wasbs://<your-container-name>@<your-storage-account-name>.blob.core.windows.net/<your-directory-name>") \
+  .option("forwardSparkAzureStorageCredentials", "true") \
+  .option("query", "select x, count(*) as cnt from my_table_in_dw group by x") \
+  .load()
+
+# Apply some transformations to the data, then use the
+# Data Source API to write the data back to another table in SQL DW.
+
+df.write \
+  .format("com.databricks.spark.sqldw") \
+  .option("url", "jdbc:sqlserver://<the-rest-of-the-connection-string>") \
+  .option("forwardSparkAzureStorageCredentials", "true") \
+  .option("dbTable", "my_table_in_dw_copy") \
+  .option("tempDir", "wasbs://<your-container-name>@<your-storage-account-name>.blob.core.windows.net/<your-directory-name>") \
+  .save()
